@@ -39,15 +39,10 @@ public class StagingPanel extends JPanel {
             fetchFiles.addActionListener((e)->{
                 //copy needed Files under C:\Staging
                 try {
-                    if(!Files.exists(Paths.get(TEST_DIR))) {
-                        Files.createDirectories(Paths.get(TEST_DIR));
+                    if(!Files.exists(Paths.get(DEST_DIR))) {
+                        Files.createDirectories(Paths.get(DEST_DIR));
                     }
-                    Copy.copy(ROOT_DIR+"1. SQL Server\\",DEST_DIR+"1. SQL Server\\");
-                    Copy.copy(ROOT_DIR+"2. Environment\\",DEST_DIR+"2. Environment\\");
-                    Copy.copy(ROOT_DIR+"3. Xstore\\",DEST_DIR+"3. Xstore\\");
-                    Copy.copy(ROOT_DIR+"4. PI Offline\\",DEST_DIR+"4. PI Offline\\");
-                    Copy.copy(ROOT_DIR+"5. Comma32\\",DEST_DIR+"5. Comma32\\");
-                    Copy.copy(ROOT_DIR+"6. Driver DM-D110USB\\",DEST_DIR+"6. Driver DM-D110USB\\");
+                   Copy.copy(ROOT_DIR,DEST_DIR);
 
                 } catch (IOException IOE) {
                     IOE.printStackTrace();
