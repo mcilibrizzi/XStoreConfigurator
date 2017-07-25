@@ -22,6 +22,7 @@ public class StagingPanel extends JPanel {
         //Create needed components
         JTextField hostname = new JTextField(20);
         JTextField jdaCode = new JTextField(20);
+        JTextField primaryHost = new JTextField(20);
 
         JButton fetchFiles = new JButton("Fetch Files");
         JButton installDB = new JButton("Install DB");
@@ -30,6 +31,16 @@ public class StagingPanel extends JPanel {
 
         JCheckBox primary = new JCheckBox();
         primary.setSelected(false);
+
+        primary.addItemListener((i)->{
+            if(primary.isSelected()){
+                primaryHost.setEditable(false);
+            }else {
+                primaryHost.setEditable(true);
+            }
+        });
+
+
 
 
         //Add Button Functionality
@@ -56,7 +67,23 @@ public class StagingPanel extends JPanel {
             System.out.println("Install XSTORE");
         });
         installXE.addActionListener((e) -> {
-            System.out.println("Install XEnvironment");
+            try {
+                Process p = Runtime.getRuntime().exec("cmd  start /wait /c \"C:\\Staging\\2. Environment\\EMEAI_environment_no_delay_1.2.1.exe\"");
+
+                p.waitFor();
+                // Now we can begin with configuration
+
+                if(primary.isSelected()){
+                    //Modify LEAD
+                }else{
+                    //Modify NON LEAD
+                }
+
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
         });
 
 
@@ -82,6 +109,8 @@ public class StagingPanel extends JPanel {
         add(jdaCode, c);
         c.gridy++;
         add(primary, c);
+        c.gridx++;
+        add(primaryHost,c);
 
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
