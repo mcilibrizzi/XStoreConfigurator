@@ -34,7 +34,7 @@ public class Copy {
     public static void copy(String sourceFolder , String destFolder){
         try {
             Files.walkFileTree(Paths.get(sourceFolder), new SimpleFileVisitor<Path>(){
-                private String finalPath=sourceFolder;
+                private String finalPath=destFolder;
 
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
@@ -44,10 +44,13 @@ public class Copy {
 
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    finalPath += dir.getFileName() + "\\";
-                    Files.createDirectories(Paths.get(finalPath));
-
-                    return FileVisitResult.CONTINUE;
+                    if(dir.equals(Paths.get(sourceFolder))){
+                        return FileVisitResult.CONTINUE;
+                    }else {
+                        finalPath += dir.getFileName() + "\\";
+                        Files.createDirectories(Paths.get(finalPath));
+                        return FileVisitResult.CONTINUE;
+                    }
                 }
 
                 @Override

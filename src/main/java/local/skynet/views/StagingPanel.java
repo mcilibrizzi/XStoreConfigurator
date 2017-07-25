@@ -4,15 +4,16 @@ import local.skynet.tools.Copy;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import org.apache.commons.io.FileUtils;
 
 public class StagingPanel extends JPanel {
 
-    private final String ROOT_DIR = "Z:\\POS Software\\";
-    private final String DEST_DIR = "C:\\Staging\\";
-    private final String TEST_DIR = "C:\\Test Environment\\";
+    private final String ROOT_DIR = "Z:/POS Software/";
+    private final String DEST_DIR = "C:/Staging/";
 
     public StagingPanel() {
 
@@ -39,10 +40,8 @@ public class StagingPanel extends JPanel {
             fetchFiles.addActionListener((e)->{
                 //copy needed Files under C:\Staging
                 try {
-                    if(!Files.exists(Paths.get(DEST_DIR))) {
-                        Files.createDirectories(Paths.get(DEST_DIR));
-                    }
-                   Copy.copy(ROOT_DIR,DEST_DIR);
+                   FileUtils.copyDirectory(new File(ROOT_DIR),new File(DEST_DIR));
+                   JOptionPane.showMessageDialog(this,"All the files have been retrieved");
 
                 } catch (IOException IOE) {
                     IOE.printStackTrace();
