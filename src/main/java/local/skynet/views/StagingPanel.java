@@ -5,6 +5,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 import org.apache.commons.io.FileUtils;
@@ -13,6 +17,8 @@ public class StagingPanel extends JPanel {
 
     private final String ROOT_DIR = "Z:/POS Software/";
     private final String DEST_DIR = "C:/Staging/";
+
+
 
     public StagingPanel() {
 
@@ -23,6 +29,7 @@ public class StagingPanel extends JPanel {
         JTextField hostname = new JTextField(20);
         JTextField jdaCode = new JTextField(20);
         JTextField primaryHost = new JTextField(20);
+        JTextField tillNumber = new JTextField(5);
 
         JButton fetchFiles = new JButton("Fetch Files");
         JButton installDB = new JButton("Install DB");
@@ -35,8 +42,10 @@ public class StagingPanel extends JPanel {
         primary.addItemListener((i)->{
             if(primary.isSelected()){
                 primaryHost.setEditable(false);
+                tillNumber.setEditable(false);
             }else {
                 primaryHost.setEditable(true);
+                tillNumber.setEditable(true);
             }
         });
 
@@ -68,6 +77,7 @@ public class StagingPanel extends JPanel {
         });
         installXE.addActionListener((e) -> {
             try {
+                Path systemProp;
                 Process p = Runtime.getRuntime().exec("cmd  start /wait /c \"C:\\Staging\\2. Environment\\EMEAI_environment_no_delay_1.2.1.exe\"");
 
                 p.waitFor();
@@ -75,9 +85,24 @@ public class StagingPanel extends JPanel {
 
                 if(primary.isSelected()){
                     //Modify LEAD
+                    systemProp = Paths.get("C:\\environment\\LEAD.system.properties");
+
                 }else{
                     //Modify NON LEAD
+                    systemProp = Paths.get("C:\\environment\\NONLEAD.system.properties");
                 }
+
+                //rename File
+                Files.move(systemProp,systemProp.resolveSibling("system.properties"), StandardCopyOption.REPLACE_EXISTING);
+                //edit File
+                List<String> fileContent = new ArrayList<>(Files.readAllLines(systemProp, StandardCharsets.UTF_8));
+
+                for (int i = 0;i<fileContent.size();i++){
+                    if(fileContent.get(i).equals("environment.regnum=")){
+                        fileContent.set(i,String.format("environment.regnum=%s",tillNumber.getText()));
+                    }
+                }
+
 
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -111,6 +136,8 @@ public class StagingPanel extends JPanel {
         add(primary, c);
         c.gridx++;
         add(primaryHost,c);
+        c.gridx++;
+        add(tillNumber,c);
 
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
@@ -127,4 +154,5 @@ public class StagingPanel extends JPanel {
 
 
     }
+
 }
