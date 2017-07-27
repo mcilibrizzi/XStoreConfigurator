@@ -9,7 +9,7 @@ public class Main {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SwingUtilities.invokeLater(()->{
-               new MainPane("XStore Configuraton");
+               new MainPane("XStore Configurator");
 
             });
         } catch (ClassNotFoundException e) {

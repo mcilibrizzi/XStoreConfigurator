@@ -17,6 +17,8 @@ public class StagingPanel extends JPanel {
 
     private final String ROOT_DIR = "Z:/POS Software/";
     private final String DEST_DIR = "C:/Staging/";
+    private String till;
+    private String primaryHostName;
 
 
 
@@ -67,13 +69,23 @@ public class StagingPanel extends JPanel {
         installDB.addActionListener((e) -> {
             try {
 
-                Runtime.getRuntime().exec("cmd start /c \"C:\\Staging\\1. SQL Server\\SQLSERVER2012_INSTALL_SCRIPT.bat\"");
+                Runtime.getRuntime().exec("cmd start /c \"cd C:\\Staging\\1. SQL Server\\ & SQLSERVER2012_INSTALL_SCRIPT.bat\"");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         });
         installXS.addActionListener((e) -> {
-            System.out.println("Install XSTORE");
+            Process p = null;
+            try {
+                p = Runtime.getRuntime().exec("cmd  start /wait /c \"cd C:\\Staging\\3. Xstore\\ & install.bat\"");
+                p.waitFor();
+                //
+                JOptionPane.showMessageDialog(this, "XSTORE has been installed");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
         });
         installXE.addActionListener((e) -> {
             try {
@@ -86,23 +98,35 @@ public class StagingPanel extends JPanel {
                 if(primary.isSelected()){
                     //Modify LEAD
                     systemProp = Paths.get("C:\\environment\\LEAD.system.properties");
+                    till="1";
+                    primaryHostName = hostname.getText();
 
                 }else{
                     //Modify NON LEAD
                     systemProp = Paths.get("C:\\environment\\NONLEAD.system.properties");
+                    till = tillNumber.getText();
+                    primaryHostName = primaryHost.getText();
                 }
 
                 //rename File
                 Files.move(systemProp,systemProp.resolveSibling("system.properties"), StandardCopyOption.REPLACE_EXISTING);
                 //edit File
-                List<String> fileContent = new ArrayList<>(Files.readAllLines(systemProp, StandardCharsets.UTF_8));
+                List<String> fileContent = new ArrayList<>(Files.readAllLines(Paths.get("C:\\environment\\system.properties"), StandardCharsets.UTF_8));
 
                 for (int i = 0;i<fileContent.size();i++){
                     if(fileContent.get(i).equals("environment.regnum=")){
-                        fileContent.set(i,String.format("environment.regnum=%s",tillNumber.getText()));
+                        fileContent.set(i,String.format("environment.regnum=%s",till));
+                    }
+                    if(fileContent.get(i).equals("environment.lead.name=")){
+                        fileContent.set(i,String.format("environment.lead.name=%s",primaryHostName));
+                    }
+                    if(fileContent.get(i).equals("environment.storenum=")){
+                        fileContent.set(i,String.format("environment.storenum=%s",jdaCode.getText()));
                     }
                 }
 
+                //write File changes
+                Files.write(Paths.get("C:\\environment\\system.properties"),fileContent,StandardCharsets.UTF_8);
 
             } catch (IOException e1) {
                 e1.printStackTrace();
