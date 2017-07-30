@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.io.FileUtils;
 
 public class StagingPanel extends JPanel {
@@ -24,10 +26,17 @@ public class StagingPanel extends JPanel {
 
     public StagingPanel() {
 
-        setLayout(new GridBagLayout());
+        GroupLayout layout = new GroupLayout(this);
+        setLayout(layout);
 
 
         //Create needed components
+        JLabel lblHostname = new JLabel("Hostname");
+        JLabel lblJDACode = new JLabel("JDA Code");
+        JLabel lblPrimaryCheck = new JLabel("Primary Till ?");
+        JLabel lblPrimaryHostName = new JLabel("Primary Till Hostname");
+        JLabel lblTillNumber = new JLabel("Till Number");
+
         JTextField hostname = new JTextField(20);
         JTextField jdaCode = new JTextField(20);
         JTextField primaryHost = new JTextField(20);
@@ -75,17 +84,17 @@ public class StagingPanel extends JPanel {
             }
         });
         installXS.addActionListener((e) -> {
-            Process p = null;
+            CommandLine cmd = CommandLine.parse("cmd.exe /wait /c 'C:\\Staging\\3. Xstore\\install.bat'");
+
+            DefaultExecutor executor = new DefaultExecutor();
+            executor.setExitValue(0);
             try {
-                p = Runtime.getRuntime().exec("cmd  start /wait /c \"cd C:\\Staging\\3. Xstore\\ & install.bat\"");
-                p.waitFor();
-                //
-                JOptionPane.showMessageDialog(this, "XSTORE has been installed");
+                int exitValue = executor.execute(cmd);
+                System.out.println(exitValue);
             } catch (IOException e1) {
                 e1.printStackTrace();
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
             }
+
         });
         installXE.addActionListener((e) -> {
             try {
@@ -136,46 +145,61 @@ public class StagingPanel extends JPanel {
         });
 
 
-        //Laying out components on the screen
-        GridBagConstraints c = new GridBagConstraints();
 
-        c.weighty = 0.25;
-        c.weightx = 0.5;
-        c.anchor = GridBagConstraints.LINE_START;
-        c.gridx = 0;
-        c.gridy = 0;
-        add(new JLabel("HOSTNAME"), c);
-        c.gridy++;
-        add(new JLabel("JDA Code"), c);
-        c.gridy++;
-        add(new JLabel("Primary Till"), c);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
 
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(lblHostname)
+                        .addComponent(lblJDACode)
+                        .addComponent(lblPrimaryCheck)
+                        .addComponent(lblPrimaryHostName)
+                        .addComponent(lblTillNumber)
+                        .addComponent(fetchFiles)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(hostname)
+                        .addComponent(jdaCode)
+                        .addComponent(primary)
+                        .addComponent(primaryHost)
+                        .addComponent(tillNumber)
+                        .addComponent(installDB)
+                )
+                .addComponent(installXE)
+                .addComponent(installXS)
+        );
 
-        c.gridx = 1;
-        c.gridy = 0;
-        add(hostname, c);
-        c.gridy++;
-        add(jdaCode, c);
-        c.gridy++;
-        add(primary, c);
-        c.gridx++;
-        add(primaryHost,c);
-        c.gridx++;
-        add(tillNumber,c);
+        layout.linkSize(fetchFiles,installDB,installXE,installXS);
 
-        c.anchor = GridBagConstraints.CENTER;
-        c.weightx = 1;
-        c.weighty = 0.5;
-        c.gridy = 3;
-        c.gridx = 0;
-        add(fetchFiles, c);
-        c.gridx++;
-        add(installDB, c);
-        c.gridx++;
-        add(installXS, c);
-        c.gridx++;
-        add(installXE, c);
-
+        layout.setVerticalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblHostname)
+                        .addComponent(hostname)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblJDACode)
+                        .addComponent(jdaCode)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblPrimaryCheck)
+                        .addComponent(primary)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblPrimaryHostName)
+                        .addComponent(primaryHost)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblTillNumber)
+                        .addComponent(tillNumber)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(fetchFiles)
+                        .addComponent(installDB)
+                        .addComponent(installXE)
+                        .addComponent(installXS)
+                )
+        );
 
     }
 

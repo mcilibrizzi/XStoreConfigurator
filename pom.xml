@@ -6,7 +6,7 @@
 
     <groupId>local.skynet</groupId>
     <artifactId>XStoreConfigurator</artifactId>
-    <version>0.1</version>
+    <version>0.2.1</version>
 
     <build>
         <plugins>
@@ -48,6 +48,12 @@
                                         <include>**</include>
                                     </includes>
                                 </filter>
+                                <filter>
+                                    <artifact>org.apache.commons:commons-exec</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
                             </filters>
                         </configuration>
                     </execution>
@@ -61,6 +67,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-io</artifactId>
             <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+            <version>1.3</version>
         </dependency>
     </dependencies>
 

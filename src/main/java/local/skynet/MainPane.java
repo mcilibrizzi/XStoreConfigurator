@@ -9,7 +9,7 @@ public class MainPane extends JFrame {
 
     public MainPane(String title){
         super(title);
-        setSize(600,700);
+        setSize(500,250);
         setResizable(false);
 
         //Add the tabbed Pane
