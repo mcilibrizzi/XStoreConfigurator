@@ -84,16 +84,23 @@ public class StagingPanel extends JPanel {
             }
         });
         installXS.addActionListener((e) -> {
-            CommandLine cmd = CommandLine.parse("cmd.exe /wait /c 'C:\\Staging\\3. Xstore\\install.bat'");
+            new Thread(()->{
+                CommandLine cmd = CommandLine.parse("cmd.exe /wait /c 'C:\\Staging\\3. Xstore\\install.bat'");
 
-            DefaultExecutor executor = new DefaultExecutor();
-            executor.setExitValue(0);
-            try {
-                int exitValue = executor.execute(cmd);
-                System.out.println(exitValue);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+                DefaultExecutor executor = new DefaultExecutor();
+                executor.setExitValue(0);
+                try {
+                    int exitValue = executor.execute(cmd);
+                    System.out.println(exitValue);
+                    if(exitValue == 0){
+                        JOptionPane.showMessageDialog(this, "XSTORE Has been installed, REMEMBER TO DELETE XSTORE FOLDER");
+                    }else{
+                        JOptionPane.showMessageDialog(this, "XSTORE INSTALLATION FAILED");
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }).start();
 
         });
         installXE.addActionListener((e) -> {
