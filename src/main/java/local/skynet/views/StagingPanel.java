@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.environment.EnvironmentUtils;
 import org.apache.commons.io.FileUtils;
 
 public class StagingPanel extends JPanel {
@@ -90,7 +91,7 @@ public class StagingPanel extends JPanel {
                 DefaultExecutor executor = new DefaultExecutor();
                 executor.setExitValue(0);
                 try {
-                    int exitValue = executor.execute(cmd);
+                    int exitValue = executor.execute(cmd, EnvironmentUtils.getProcEnvironment());
                     System.out.println(exitValue);
                     if(exitValue == 0){
                         JOptionPane.showMessageDialog(this, "XSTORE Has been installed, REMEMBER TO DELETE XSTORE FOLDER");
