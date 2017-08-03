@@ -91,6 +91,7 @@ public class StagingPanel extends JPanel {
                 DefaultExecutor executor = new DefaultExecutor();
                 executor.setExitValue(0);
                 try {
+                    System.out.println(EnvironmentUtils.getProcEnvironment().toString());
                     int exitValue = executor.execute(cmd, EnvironmentUtils.getProcEnvironment());
                     System.out.println(exitValue);
                     if(exitValue == 0){
