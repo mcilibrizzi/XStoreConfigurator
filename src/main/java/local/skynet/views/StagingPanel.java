@@ -1,29 +1,13 @@
 package local.skynet.views;
 
-
 import javax.swing.*;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
+import local.skynet.controls.FetchFiles;
+import local.skynet.controls.InstallDB;
+import local.skynet.controls.InstallXE;
+import local.skynet.controls.InstallXS;
 
-
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.environment.EnvironmentUtils;
-import org.apache.commons.io.FileUtils;
 
 public class StagingPanel extends JPanel {
-
-    private final String ROOT_DIR = "Z:/POS Software/";
-    private final String DEST_DIR = "C:/Staging/";
-    private String till;
-    private String primaryHostName;
-
-
 
     public StagingPanel() {
 
@@ -60,99 +44,19 @@ public class StagingPanel extends JPanel {
                 tillNumber.setEditable(true);
             }
         });
-
-
-
-
         //Add Button Functionality
 
-        fetchFiles.addActionListener((e) -> {
-            //copy needed Files under C:\Staging
-            try {
-                FileUtils.copyDirectory(new File(ROOT_DIR), new File(DEST_DIR));
-                JOptionPane.showMessageDialog(this, "All the files have been retrieved");
-
-            } catch (IOException IOE) {
-                IOE.printStackTrace();
-            }
-        });
-        installDB.addActionListener((e) -> {
-            try {
-
-                Runtime.getRuntime().exec("cmd start /c \"cd C:\\Staging\\1. SQL Server\\ & SQLSERVER2012_INSTALL_SCRIPT.bat\"");
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
+        fetchFiles.addActionListener((e) -> new FetchFiles().perform());
+        installDB.addActionListener((e)  -> new InstallDB().perform());
         installXS.addActionListener((e) -> {
-            new Thread(()->{
-                CommandLine cmd = CommandLine.parse("cmd.exe /wait /c 'C:\\Staging\\3. Xstore\\install.bat'");
-
-                DefaultExecutor executor = new DefaultExecutor();
-                executor.setExitValue(0);
-                try {
-                    System.out.println(EnvironmentUtils.getProcEnvironment().toString());
-                    int exitValue = executor.execute(cmd, EnvironmentUtils.getProcEnvironment());
-                    System.out.println(exitValue);
-                    if(exitValue == 0){
-                        JOptionPane.showMessageDialog(this, "XSTORE Has been installed, REMEMBER TO DELETE XSTORE FOLDER");
-                    }else{
-                        JOptionPane.showMessageDialog(this, "XSTORE INSTALLATION FAILED");
-                    }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }).start();
-
+            new Thread(()->new InstallXS().perform()).start();
         });
         installXE.addActionListener((e) -> {
-            try {
-                Path systemProp;
-                Process p = Runtime.getRuntime().exec("cmd  start /wait /c \"C:\\Staging\\2. Environment\\EMEAI_environment_no_delay_1.2.1.exe\"");
+            InstallXE installXE1 = new InstallXE();
 
-                p.waitFor();
-                // Now we can begin with configuration
-
-                if(primary.isSelected()){
-                    //Modify LEAD
-                    systemProp = Paths.get("C:\\environment\\LEAD.system.properties");
-                    till="1";
-                    primaryHostName = hostname.getText();
-
-                }else{
-                    //Modify NON LEAD
-                    systemProp = Paths.get("C:\\environment\\NONLEAD.system.properties");
-                    till = tillNumber.getText();
-                    primaryHostName = primaryHost.getText();
-                }
-
-                //rename File
-                Files.move(systemProp,systemProp.resolveSibling("system.properties"), StandardCopyOption.REPLACE_EXISTING);
-                //edit File
-                List<String> fileContent = new ArrayList<>(Files.readAllLines(Paths.get("C:\\environment\\system.properties"), StandardCharsets.UTF_8));
-
-                for (int i = 0;i<fileContent.size();i++){
-                    if(fileContent.get(i).equals("environment.regnum=")){
-                        fileContent.set(i,String.format("environment.regnum=%s",till));
-                    }
-                    if(fileContent.get(i).equals("environment.lead.name=")){
-                        fileContent.set(i,String.format("environment.lead.name=%s",primaryHostName));
-                    }
-                    if(fileContent.get(i).equals("environment.storenum=")){
-                        fileContent.set(i,String.format("environment.storenum=%s",jdaCode.getText()));
-                    }
-                }
-
-                //write File changes
-                Files.write(Paths.get("C:\\environment\\system.properties"),fileContent,StandardCharsets.UTF_8);
-
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
+            installXE1.getVales(primaryHost.getText(),tillNumber.getText(),primary.isSelected(),jdaCode.getText(),hostname.getText());
+            installXE1.perform();
         });
-
 
 
         layout.setAutoCreateGaps(true);
