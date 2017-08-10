@@ -1,5 +1,6 @@
 package local.skynet.controls;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -59,6 +60,7 @@ public class InstallXE implements InstallationStep {
 
             //write File changes
             Files.write(Paths.get("C:\\environment\\system.properties"),fileContent,StandardCharsets.UTF_8);
+            JOptionPane.showMessageDialog(null, "Environment has been installed and configured!!");
 
         } catch (IOException e1) {
             e1.printStackTrace();
