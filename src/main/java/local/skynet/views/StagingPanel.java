@@ -1,10 +1,8 @@
 package local.skynet.views;
 
 import javax.swing.*;
-import local.skynet.controls.FetchFiles;
-import local.skynet.controls.InstallDB;
-import local.skynet.controls.InstallXE;
-import local.skynet.controls.InstallXS;
+
+import local.skynet.controls.*;
 
 
 public class StagingPanel extends JPanel {
@@ -31,6 +29,8 @@ public class StagingPanel extends JPanel {
         JButton installDB = new JButton("Install DB");
         JButton installXS = new JButton("Install XS");
         JButton installXE = new JButton("Install XE");
+        JButton installCM32 = new JButton("Install ComMa32");
+        JButton installFintrax = new JButton("Install PI Offline");
 
         JCheckBox primary = new JCheckBox();
         primary.setSelected(false);
@@ -57,6 +57,8 @@ public class StagingPanel extends JPanel {
             installXE1.getVales(primaryHost.getText(),tillNumber.getText(),primary.isSelected(),jdaCode.getText(),hostname.getText());
             installXE1.perform();
         });
+        installCM32.addActionListener((e)-> new InstallComMa32().perform());
+        installFintrax.addActionListener((e -> System.out.println("FINTRAX")));
 
 
         layout.setAutoCreateGaps(true);
@@ -70,6 +72,7 @@ public class StagingPanel extends JPanel {
                         .addComponent(lblPrimaryHostName)
                         .addComponent(lblTillNumber)
                         .addComponent(fetchFiles)
+                        .addComponent(installCM32)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(hostname)
@@ -78,9 +81,11 @@ public class StagingPanel extends JPanel {
                         .addComponent(primaryHost)
                         .addComponent(tillNumber)
                         .addComponent(installDB)
+                        .addComponent(installFintrax)
                 )
                 .addComponent(installXE)
                 .addComponent(installXS)
+
         );
 
         layout.linkSize(fetchFiles,installDB,installXE,installXS);
@@ -111,6 +116,10 @@ public class StagingPanel extends JPanel {
                         .addComponent(installDB)
                         .addComponent(installXE)
                         .addComponent(installXS)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(installCM32)
+                        .addComponent(installFintrax)
                 )
         );
 
