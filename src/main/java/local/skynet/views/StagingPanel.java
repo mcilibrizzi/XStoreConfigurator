@@ -58,7 +58,7 @@ public class StagingPanel extends JPanel {
             installXE1.perform();
         });
         installCM32.addActionListener((e)-> new InstallComMa32().perform());
-        installFintrax.addActionListener((e -> System.out.println("FINTRAX")));
+        installFintrax.addActionListener( e -> new InstallPI().perform());
 
 
         layout.setAutoCreateGaps(true);
