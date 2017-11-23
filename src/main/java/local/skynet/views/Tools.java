@@ -1,4 +1,6 @@
 package local.skynet.views;
+import local.skynet.controls.WindowsTenFix;
+
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -8,13 +10,18 @@ public class Tools extends JPanel {
     private JLabel password;
     private JLabel tipPassword;
     private JButton computePassword;
+    private JButton win10Btn;
+
+    private JLabel win10FIX;
 
 
     public Tools(){
         password = new JLabel("");
         tipPassword = new JLabel("Xstore Daily Password");
         computePassword = new JButton("Compute");
-        
+
+        win10FIX = new JLabel("Windows 10 configuration");
+        win10Btn = new JButton("DTVINST FILES");
         
         GroupLayout groupLayout = new GroupLayout(this);
 
@@ -24,10 +31,14 @@ public class Tools extends JPanel {
         groupLayout.setAutoCreateContainerGaps(true);
 
         groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
-                .addComponent(tipPassword)
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(tipPassword)
+                        .addComponent(win10FIX)
+                )
                 .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(password)
-                        .addComponent(computePassword)
+                        .addComponent(computePassword,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+                        .addComponent(win10Btn,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                 )
         );
         groupLayout.setVerticalGroup(groupLayout.createSequentialGroup()
@@ -36,6 +47,10 @@ public class Tools extends JPanel {
                         .addComponent(password)
                 )
                 .addComponent(computePassword)
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(win10FIX)
+                        .addComponent(win10Btn)
+                )
         );
 
 
@@ -64,6 +79,7 @@ public class Tools extends JPanel {
 
 
         });
+        win10Btn.addActionListener(e->{new WindowsTenFix().perform();});
 
 
     }
