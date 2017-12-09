@@ -1,5 +1,6 @@
 package local.skynet;
 
+import local.skynet.views.BackOffice;
 import local.skynet.views.StagingPanel;
 import local.skynet.views.Tools;
 
@@ -18,7 +19,7 @@ public class MainPane extends JFrame {
         paneContainer.addTab("Staging", new StagingPanel());
         paneContainer.addTab("On Site",new JPanel());
         paneContainer.addTab("Tools",new Tools());
-
+        paneContainer.addTab("Back Office",new BackOffice());
 
 
         add(paneContainer);

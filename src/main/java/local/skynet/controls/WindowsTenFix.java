@@ -1,6 +1,4 @@
 package local.skynet.controls;
-
-
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
@@ -12,7 +10,7 @@ public class WindowsTenFix implements InstallationStep {
     private File baseXStore;
     private File win10Path;
 
-    public WindowsTenFix(){
+    public WindowsTenFix() {
         baseXStore = new File("C:/Staging/3. Xstore");
         win10Path = new File("C:/dtvinst");
     }
