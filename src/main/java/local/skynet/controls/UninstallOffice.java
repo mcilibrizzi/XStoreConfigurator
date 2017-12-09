@@ -24,6 +24,8 @@ public class UninstallOffice implements InstallationStep{
                 }
         }catch (IOException e1) {
             e1.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Office 2007 has NOT been uninstalled!! Please check your configuration Path");
         }
+
     }
 }
